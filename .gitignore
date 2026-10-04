@@ -18,3 +18,21 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> TradeLens ###
+# Exports de courtier : données personnelles (adresses e-mail, identifiants de compte, historique de trades)
+/data/
+
+# Sauvegardes et exports de base de données à la racine (celles de var/ sont déjà ignorées)
+/*.sql
+/*.sql.gz
+
+# Réglages personnels de Claude Code (autorisations de commandes). Le dossier .claude/skills, lui, peut être partagé.
+/.claude/settings.local.json
+
+# Éditeurs et systèmes
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+###< TradeLens ###
