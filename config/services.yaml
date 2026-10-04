@@ -9,8 +9,7 @@
 parameters:
     app.display_timezone: 'Europe/Paris'
 
-    # Valeur d'un point en dollars, par racine de contrat (ESU5 -> ES).
-    # Ces valeurs servent aux calculs bcmath.
+    # Valeur d'un point en dollars par racine de contrat (ESU5 -> ES), pour les calculs bcmath.
     app.contract_multipliers:
         ES: '50'
         MES: '5'

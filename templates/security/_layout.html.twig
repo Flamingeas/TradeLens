@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{# Mise en page commune de la connexion et de l'inscription : une carte centrée sur le fond noir de la vitrine. #}
+{% block body %}
+    <a class="visually-hidden-focusable position-absolute m-2 btn btn-tl" href="#contenu">Aller au formulaire</a>
+
+    <div class="tl-auth">
+        <header>
+            <a class="tl-brand tl-auth-brand" href="{{ path('app_home') }}" aria-label="TradeLens, retour à l'accueil">TradeLens</a>
+        </header>
+
+        <main id="contenu" class="tl-auth-card card">
+            <div class="card-body p-4">
+                <ul class="nav nav-pills tl-auth-tabs mb-4" aria-label="Accès à TradeLens">
+                    <li class="nav-item">
+                        <a class="nav-link{{ active_tab == 'login' ? ' active' }}" href="{{ path('app_login') }}" {{ active_tab == 'login' ? 'aria-current=page' }}>Se connecter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{{ active_tab == 'register' ? ' active' }}" href="{{ path('app_register') }}" {{ active_tab == 'register' ? 'aria-current=page' }}>Créer un compte</a>
+                    </li>
+                </ul>
+
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type }}" role="{{ type == 'danger' ? 'alert' : 'status' }}">{{ message }}</div>
+                    {% endfor %}
+                {% endfor %}
+
+                {% block auth_content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+{% endblock %}

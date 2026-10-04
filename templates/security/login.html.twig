@@ -1,0 +1,39 @@
+{% extends 'security/_layout.html.twig' %}
+
+{% set active_tab = 'login' %}
+
+{% block title %}TradeLens - Connexion{% endblock %}
+
+{% block auth_content %}
+    <h1 class="h4 mb-1">Bon retour</h1>
+    <p class="tl-help mb-4">Connectez-vous pour retrouver vos comptes et vos analyses.</p>
+
+    {% if error %}
+        {# Message volontairement générique : on ne dit pas si c'est l'adresse ou le mot de passe qui est faux. #}
+        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form method="post" action="{{ path('app_login') }}">
+        <div class="mb-3">
+            <label class="form-label" for="login-email">Adresse e-mail</label>
+            <input class="form-control" type="email" id="login-email" name="email" value="{{ last_email }}"
+                   autocomplete="email" required autofocus>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="login-password">Mot de passe</label>
+            <input class="form-control" type="password" id="login-password" name="password"
+                   autocomplete="current-password" required>
+        </div>
+
+        <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="login-remember" name="_remember_me" value="1">
+            <label class="form-check-label" for="login-remember">Rester connecté</label>
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        <button class="btn btn-tl w-100" type="submit">Se connecter</button>
+    </form>
+
+    <p class="tl-help text-center mt-4 mb-0">Pas encore de compte ? <a href="{{ path('app_register') }}">Créer un compte</a></p>
+{% endblock %}

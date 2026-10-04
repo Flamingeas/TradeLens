@@ -1,3 +1,844 @@
-body {
-    background-color: skyblue;
+/* TradeLens : compléments à Bootstrap 5.3, thème sombre unique (variables --bs-* ajustées vers un noir teinté de vert). */
+
+/* Geist (Vercel), police auto-hébergée, licence SIL OFL : voir assets/fonts/Geist-OFL.txt */
+@font-face {
+    font-family: "Geist";
+    src: url("../fonts/Geist-Variable.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --bs-body-font-family: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+    /* Accent vert de l'interface. */
+    --tl-green-rgb: 52 183 138;
+}
+
+/* Palette noire de la page ; les cartes sont un cran au-dessus. */
+[data-bs-theme="dark"] {
+    --bs-body-bg: #0a0d0c;
+    --bs-body-bg-rgb: 10, 13, 12;
+    --bs-secondary-bg: #141a17;
+    --bs-secondary-bg-rgb: 20, 26, 23;
+    --bs-tertiary-bg: #0e1311;
+    --bs-tertiary-bg-rgb: 14, 19, 17;
+    --bs-border-color: #262d2a;
+}
+
+.card {
+    --bs-card-bg: #101513;
+}
+
+:root,
+[data-bs-theme] {
+    /* Couleurs de la courbe de capital, lues par equity_chart_controller.js */
+    --chart-line: var(--bs-link-color);
+    --chart-fill: rgba(var(--bs-link-color-rgb), 0.14);
+    --chart-grid: var(--bs-border-color);
+    --chart-text: var(--bs-secondary-color);
+}
+
+/* Boutons verts semi-transparents (.btn-tl), transparence réglée par --tl-alpha. */
+.btn-tl {
+    --tl-alpha: 0.5;
+    --tl-btn-text: #f0faf5;
+
+    --bs-btn-color: var(--tl-btn-text);
+    --bs-btn-bg: rgb(var(--tl-green-rgb) / var(--tl-alpha));
+    --bs-btn-border-color: rgb(var(--tl-green-rgb) / 0.75);
+    --bs-btn-hover-color: var(--tl-btn-text);
+    --bs-btn-hover-bg: rgb(var(--tl-green-rgb) / 0.65);
+    --bs-btn-hover-border-color: rgb(var(--tl-green-rgb) / 0.9);
+    --bs-btn-active-color: var(--tl-btn-text);
+    --bs-btn-active-bg: rgb(var(--tl-green-rgb) / 0.75);
+    --bs-btn-active-border-color: rgb(var(--tl-green-rgb));
+    --bs-btn-focus-shadow-rgb: 52, 183, 138;
+
+    font-weight: 600;
+    white-space: nowrap;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+
+.btn-tl:active {
+    transform: translateY(1px) scale(0.98); 
+}
+
+.btn-tl:focus-visible {
+    outline: 3px solid rgb(111 214 172);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-tl {
+        transition: none;
+    }
+
+    .btn-tl:active {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .btn-tl {
+        --tl-alpha: 0.85;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+/* Vitrine : dégradé noir avec lueur verte diffuse, qui finit sur la couleur du fond de page. */
+.tl-hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh; 
+    padding-block: clamp(2rem, 6vh, 5rem);
+    color: #eef4f0;
+    text-align: center;
+    background:
+        radial-gradient(60% 55% at 50% 0%, rgb(var(--tl-green-rgb) / 0.28), transparent 70%),
+        radial-gradient(50% 40% at 50% 100%, rgb(var(--tl-green-rgb) / 0.09), transparent 72%),
+        linear-gradient(180deg, #0b0f0d 0%, #060807 55%, #0a0d0c 100%);
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.tl-hero > .container {
+    width: 100%;
+}
+
+.tl-hero-copy {
+    max-width: 60rem;
+    margin-inline: auto;
+}
+
+.tl-hero-title {
+    margin: 0 0 clamp(0.75rem, 2.2vh, 1.5rem);
+    font-size: clamp(3.25rem, min(17vw, 19vh), 11rem);
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    padding-bottom: 0.05em;
+}
+
+.tl-hero-text {
+    max-width: 48rem;
+    margin: 0 auto clamp(1.5rem, 4.5vh, 3rem);
+    line-height: 1.5;
+}
+
+.tl-hero-slogan,
+.tl-hero-hint {
+    display: block;
+    text-wrap: balance;
+}
+
+.tl-hero-slogan {
+    font-size: clamp(1.35rem, 2.2vw + 1rem, 2.6rem);
+    font-weight: 500;
+    line-height: 1.25;
+    color: #eef4f0;
+}
+
+.tl-hero-hint {
+    margin-top: clamp(0.4rem, 1.2vh, 0.9rem);
+    font-size: clamp(1.05rem, 1.2vw + 0.8rem, 1.45rem);
+    color: rgb(238 244 240 / 0.72);
+}
+
+.tl-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem 1rem;
+}
+
+.import-panel {
+    display: contents; 
+}
+
+.tl-hero .btn-lg {
+    --bs-btn-padding-y: clamp(0.7rem, 1.6vh, 1rem);
+    --bs-btn-padding-x: clamp(1.4rem, 3vw, 2.4rem);
+    --bs-btn-font-size: clamp(1.05rem, 0.8vw + 0.85rem, 1.4rem);
+}
+
+.btn-tl-danger {
+    --tl-btn-text: #ffe9e7;
+    --bs-btn-bg: rgba(var(--bs-danger-rgb), var(--tl-alpha));
+    --bs-btn-border-color: rgba(var(--bs-danger-rgb), 0.75);
+    --bs-btn-hover-bg: rgba(var(--bs-danger-rgb), 0.65);
+    --bs-btn-hover-border-color: rgba(var(--bs-danger-rgb), 0.9);
+    --bs-btn-active-bg: rgba(var(--bs-danger-rgb), 0.75);
+    --bs-btn-active-border-color: rgb(var(--bs-danger-rgb));
+    --bs-btn-color: var(--tl-btn-text);
+    --bs-btn-hover-color: var(--tl-btn-text);
+    --bs-btn-active-color: var(--tl-btn-text);
+}
+
+/* Bouton secondaire presque transparent */
+.btn-tl-ghost {
+    --tl-alpha: 0.12;
+    --bs-btn-border-color: rgb(var(--tl-green-rgb) / 0.6);
+    --bs-btn-hover-bg: rgb(var(--tl-green-rgb) / 0.3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Fenêtre d'import : petite fenêtre centrée sur fond assombri. */
+.tl-dialog {
+    width: min(32rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    padding: 0;
+    overflow: auto;
+    text-align: left;
+    color: #eef4f0;
+    background: #0f1412;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: var(--bs-border-radius);
+    box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 0.6);
+}
+
+.tl-dialog::backdrop {
+    background: rgb(4 6 5 / 0.7);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .tl-dialog::backdrop {
+        background: rgb(4 6 5 / 0.92);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+.tl-import,
+.tl-confirm form {
+    padding: 1.25rem;
+}
+
+.tl-confirm {
+    width: min(26rem, calc(100vw - 2rem));
+}
+
+/* Cadre du tableau de bord pendant un rechargement partiel (Turbo pose aria-busy) */
+turbo-frame[aria-busy="true"] {
+    opacity: 0.55;
+    transition: opacity 0.15s;
+}
+
+.scroll-mt-3 {
+    scroll-margin-top: 1rem;
+}
+
+.tl-steps {
+    margin: 0 0 1.25rem;
+    padding-left: 1.25rem;
+    color: rgb(238 244 240 / 0.85);
+}
+
+.tl-help,
+.tl-optional {
+    color: rgb(238 244 240 / 0.7);
+}
+
+.tl-help {
+    font-size: 0.875rem;
+}
+
+.tl-dialog .form-label,
+.tl-auth .form-label {
+    color: rgb(238 244 240 / 0.9);
+}
+
+.tl-dialog .form-control,
+.tl-auth .form-control {
+    background-color: rgb(255 255 255 / 0.06);
+    border-color: rgb(255 255 255 / 0.2);
+    color: #eef4f0;
+}
+
+.tl-dialog .form-control::placeholder,
+.tl-auth .form-control::placeholder {
+    color: rgb(238 244 240 / 0.6);
+}
+
+.tl-dialog .form-control:focus,
+.tl-auth .form-control:focus {
+    background-color: rgb(255 255 255 / 0.08);
+    border-color: rgb(var(--tl-green-rgb));
+    box-shadow: 0 0 0 0.25rem rgb(var(--tl-green-rgb) / 0.35);
+}
+
+.tl-dialog .form-check-input:checked,
+.tl-auth .form-check-input:checked {
+    background-color: rgb(var(--tl-green-rgb));
+    border-color: rgb(var(--tl-green-rgb));
+}
+
+.tl-dialog .form-check-input:focus,
+.tl-auth .form-check-input:focus {
+    border-color: rgb(var(--tl-green-rgb));
+    box-shadow: 0 0 0 0.25rem rgb(var(--tl-green-rgb) / 0.35);
+}
+
+.tl-dialog :focus-visible,
+.tl-auth :focus-visible {
+    outline: 3px solid rgb(111 214 172);
+    outline-offset: 2px;
+}
+
+/* Barre de filtres (sous la vitrine) */
+.filters .nav-link {
+    min-height: 2.75rem;
+    color: var(--bs-body-color);
+}
+
+.filters .nav-link.active {
+    color: #f0faf5;
+    background-color: rgb(var(--tl-green-rgb) / 0.5);
+    border: 1px solid rgb(var(--tl-green-rgb) / 0.75);
+}
+
+.filters .form-select,
+.filters .btn {
+    min-height: 2.75rem;
+}
+
+/* Barre d'outils : cartes de comptes et période. */
+.tl-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tl-accounts {
+    display: flex;
+    flex: 1 1 100%; 
+    gap: 0.75rem;
+    min-width: 0;
+    padding-bottom: 0.25rem;
+    overflow-x: auto; 
+    scroll-snap-type: x proximity;
+}
+
+.tl-account {
+    display: grid;
+    flex: 0 0 auto;
+    gap: 0.1rem;
+    min-width: 11rem;
+    max-width: 16rem;
+    padding: 0.65rem 0.9rem;
+    color: var(--bs-body-color);
+    text-decoration: none;
+    background: var(--bs-card-bg, #101513);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    scroll-snap-align: start;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.tl-account:hover {
+    border-color: rgb(var(--tl-green-rgb) / 0.5);
+    color: var(--bs-body-color);
+}
+
+.tl-account.is-active {
+    background: rgb(var(--tl-green-rgb) / 0.12);
+    border-color: rgb(var(--tl-green-rgb) / 0.75);
+}
+
+.tl-account:focus-visible {
+    outline: 3px solid rgb(111 214 172);
+    outline-offset: 2px;
+}
+
+.tl-account-wrap {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+}
+
+.tl-account-wrap .tl-account {
+    padding-right: 2.6rem; 
+}
+
+.tl-account-delete {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    place-items: center;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--bs-secondary-color);
+    background: transparent;
+    border: 0;
+    border-radius: var(--bs-border-radius-sm);
+    cursor: pointer;
+}
+
+.tl-account-delete:hover,
+.tl-account-delete:focus-visible {
+    color: var(--bs-danger-text-emphasis);
+    background: rgba(var(--bs-danger-rgb), 0.18);
+}
+
+.tl-account-delete:focus-visible,
+.tl-account-add:focus-visible {
+    outline: 3px solid rgb(111 214 172);
+    outline-offset: 2px;
+}
+
+/* Bouton "+" pour ajouter un compte en important un fichier */
+.tl-account-add {
+    display: grid;
+    flex: 0 0 auto;
+    min-width: 4.5rem;
+    place-items: center;
+    font-size: 1.9rem;
+    line-height: 1;
+    color: rgb(var(--tl-green-rgb));
+    background: transparent;
+    border: 1px dashed rgb(var(--tl-green-rgb) / 0.6);
+    border-radius: var(--bs-border-radius);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.tl-account-add:hover {
+    background: rgb(var(--tl-green-rgb) / 0.12);
+    border-color: rgb(var(--tl-green-rgb));
+}
+
+.tl-account-name {
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tl-account-net {
+    font-size: 1.1rem;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+}
+
+.tl-account-meta {
+    font-size: 0.75rem;
+    color: var(--bs-secondary-color);
+}
+
+/* Tuiles d'indicateurs : libellé discret, gros chiffre, détail. */
+.tl-section-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+}
+
+.tl-stat {
+    height: 100%;
+    padding: 0.9rem 1rem;
+    background: var(--bs-card-bg, #101513);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.tl-stat-hero {
+    background:
+        radial-gradient(90% 120% at 0% 0%, rgb(var(--tl-green-rgb) / 0.14), transparent 70%),
+        var(--bs-card-bg, #101513);
+    border-color: rgb(var(--tl-green-rgb) / 0.4);
+}
+
+.tl-stat-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+}
+
+.tl-stat-value {
+    margin: 0.15rem 0 0;
+    font-size: clamp(1.05rem, 1.35vw, 1.5rem);
+    font-weight: 650;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.tl-stat-hero .tl-stat-value {
+    font-size: clamp(2rem, 2.4vw + 1.2rem, 2.9rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.tl-stat-sub {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--bs-secondary-color);
+}
+
+/* Jauge de consistance : remplissage vert, graduations blanches à 30, 40 et 50 % */
+.tl-meter {
+    position: relative;
+    height: 0.5rem;
+    margin: 0.85rem 0 0.6rem;
+    background: rgb(255 255 255 / 0.08);
+    border-radius: 999px;
+}
+
+.tl-meter-fill {
+    height: 100%;
+    background: rgb(var(--tl-green-rgb) / 0.85);
+    border-radius: inherit;
+}
+
+.tl-meter-tick {
+    position: absolute;
+    top: -0.25rem;
+    bottom: -0.25rem;
+    width: 2px;
+    background: rgb(255 255 255 / 0.55);
+}
+
+/* Calendrier des P&L par jour, du lundi au dimanche, avec total de la semaine. */
+.tl-cal-month {
+    min-width: 8.5rem;
+    font-weight: 600;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.tl-cal {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 4px;
+}
+
+.tl-cal thead th {
+    padding-bottom: 0.25rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--bs-secondary-color);
+}
+
+.tl-cal-day,
+.tl-cal-total {
+    height: 4.5rem;
+    padding: 0.3rem 0.35rem;
+    vertical-align: top;
+    border-radius: var(--bs-border-radius-sm);
+}
+
+.tl-cal-day {
+    background: rgb(255 255 255 / 0.03);
+}
+
+.tl-cal-day.is-outside {
+    background: transparent;
+}
+
+.tl-cal-total {
+    vertical-align: middle;
+    text-align: center;
+    border-left: 1px solid var(--bs-border-color);
+    border-radius: 0;
+}
+
+.tl-cal-num {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--bs-secondary-color);
+}
+
+.tl-cal-pnl {
+    display: block;
+    margin-top: 0.15rem;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    font-weight: 650;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.tl-cal-count {
+    display: block;
+    font-size: 0.65rem;
+    text-align: center;
+    color: var(--bs-secondary-color);
+}
+
+/* Intensité proportionnelle au net du jour. */
+.tl-cal-day.is-pos-1 { background: rgb(var(--tl-green-rgb) / 0.14); }
+.tl-cal-day.is-pos-2 { background: rgb(var(--tl-green-rgb) / 0.26); }
+.tl-cal-day.is-pos-3 { background: rgb(var(--tl-green-rgb) / 0.4); }
+.tl-cal-day.is-neg-1 { background: rgba(var(--bs-danger-rgb), 0.14); }
+.tl-cal-day.is-neg-2 { background: rgba(var(--bs-danger-rgb), 0.26); }
+.tl-cal-day.is-neg-3 { background: rgba(var(--bs-danger-rgb), 0.4); }
+
+@media (max-width: 575.98px) {
+    .tl-cal {
+        border-spacing: 2px;
+    }
+
+    .tl-cal-day,
+    .tl-cal-total {
+        height: 3.4rem;
+        padding: 0.2rem;
+    }
+
+    .tl-cal-pnl {
+        font-size: 0.68rem;
+    }
+
+    .tl-cal-count {
+        display: none;
+    }
+}
+
+/* Tableau de bord */
+
+/* Gains et pertes : variantes "emphasis" de Bootstrap, contrastées sur fond sombre. */
+.is-positive {
+    color: var(--bs-success-text-emphasis);
+}
+
+.is-negative {
+    color: var(--bs-danger-text-emphasis);
+}
+
+.is-neutral {
+    color: var(--bs-body-color);
+}
+
+.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.chart {
+    position: relative;
+    height: 16rem;
+}
+
+@media (min-width: 768px) {
+    .chart {
+        height: 22rem;
+    }
+}
+
+.border-dashed {
+    border-style: dashed !important;
+}
+
+/* Tableau de trades sur petit écran : marges et police réduites pour que la colonne P&L reste visible */
+@media (max-width: 575.98px) {
+    .table-responsive .table {
+        font-size: 0.9rem;
+    }
+
+    .table-responsive .table > :not(caption) > * > * {
+        padding: 0.55rem 0.5rem;
+    }
+}
+
+/* Barre supérieure du tableau de bord */
+.tl-topbar {
+    background: linear-gradient(180deg, #0b0f0d 0%, #0a0d0c 100%);
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.tl-brand {
+    font-size: 1.35rem;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    color: #eef4f0;
+    text-decoration: none;
+}
+
+.tl-brand:hover,
+.tl-brand:focus-visible {
+    color: #eef4f0;
+}
+
+.tl-brand:focus-visible {
+    outline: 3px solid rgb(111 214 172);
+    outline-offset: 2px;
+}
+
+.tl-user {
+    max-width: 16rem;
+    overflow: hidden;
+    font-size: 0.875rem;
+    color: var(--bs-secondary-color);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Pages de connexion et d'inscription : carte centrée sur le fond noir. */
+.tl-auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 2rem 1rem;
+    color: #eef4f0;
+    background:
+        radial-gradient(60% 50% at 50% 0%, rgb(var(--tl-green-rgb) / 0.22), transparent 70%),
+        linear-gradient(180deg, #0b0f0d 0%, #060807 55%, #0a0d0c 100%);
+}
+
+.tl-auth-brand {
+    font-size: 1.75rem;
+}
+
+.tl-auth-card {
+    --bs-card-bg: rgb(255 255 255 / 0.05);
+    --bs-card-border-color: rgb(255 255 255 / 0.14);
+    width: min(26rem, 100%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .tl-auth-card {
+        --bs-card-bg: #111614;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+.tl-auth-tabs .nav-link {
+    min-height: 2.5rem;
+    color: #eef4f0;
+}
+
+.tl-auth-tabs .nav-link.active {
+    color: #f0faf5;
+    background-color: rgb(var(--tl-green-rgb) / 0.5);
+    border: 1px solid rgb(var(--tl-green-rgb) / 0.75);
+}
+
+.tl-auth .tl-help a {
+    color: rgb(111 214 172);
+}
+
+.tl-auth .form-text,
+.tl-auth .invalid-feedback {
+    font-size: 0.85rem;
+}
+
+.tl-auth .form-text {
+    color: rgb(238 244 240 / 0.7);
+}
+
+/* Accessibilité (WCAG 2.2 AA) */
+
+/* Focus clavier visible : anneau vert clair sur tout élément interactif (2.4.7). */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid rgb(111 214 172);
+    outline-offset: 2px;
+}
+
+/* Anneau de focus non rogné sur le résumé d'erreurs et la zone défilable. */
+.table-responsive:focus-visible {
+    outline-offset: -3px;
+}
+
+/* Calendrier : contraste 4,5:1 conservé sur les teintes les plus soutenues (1.4.3). */
+.tl-cal-day[class*="is-pos-"] .tl-cal-num,
+.tl-cal-day[class*="is-pos-"] .tl-cal-count,
+.tl-cal-day[class*="is-neg-"] .tl-cal-num,
+.tl-cal-day[class*="is-neg-"] .tl-cal-count {
+    color: var(--bs-body-color);
+}
+
+/* Flèches du calendrier : cible d'au moins 36 px (2.5.8). */
+.tl-cal-nav {
+    display: inline-grid;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    place-items: center;
+}
+
+/* Données de la courbe, en tableau : repliées par défaut, défilables quand elles sont longues. */
+.tl-data > summary {
+    display: inline-block;
+    padding: 0.4rem 0;
+    color: var(--bs-link-color);
+    cursor: pointer;
+}
+
+.tl-data-scroll {
+    max-height: 18rem;
+    margin-top: 0.5rem;
+    overflow: auto;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.tl-data-scroll thead th {
+    position: sticky;
+    top: 0;
+    background: var(--bs-secondary-bg);
+}
+
+/* Mouvement réduit : ni transition, ni animation, ni défilement doux (2.3.3). */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
+/* Anneau de focus rétabli sur les pilules de navigation (période, onglets). */
+.nav-link:focus-visible {
+    outline: 3px solid rgb(111 214 172);
+    outline-offset: 2px;
+}
+
+/* Flèches du calendrier : texte à 4,5:1, atténué quand elles sont désactivées. */
+.tl-cal-nav {
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-border-color: var(--bs-border-color);
 }

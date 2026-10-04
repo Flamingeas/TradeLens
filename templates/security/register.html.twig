@@ -1,0 +1,36 @@
+{% extends 'security/_layout.html.twig' %}
+
+{% set active_tab = 'register' %}
+
+{% block title %}TradeLens - Créer un compte{% endblock %}
+
+{% block auth_content %}
+    <h1 class="h4 mb-1">Créer un compte</h1>
+    <p class="tl-help mb-4">Vos comptes de trading et vos trades ne sont visibles que par vous.</p>
+
+    {% if form.vars.submitted and not form.vars.valid %}
+        {# Résumé des erreurs : il reçoit le focus (WCAG 3.3.1) et renvoie vers chaque champ en faute. #}
+        <div class="alert alert-danger" role="alert" tabindex="-1" data-controller="autofocus" aria-labelledby="error-summary-title">
+            <h2 id="error-summary-title" class="h6">Le formulaire contient des erreurs</h2>
+            <ul class="mb-0">
+                {% for field in [form.email, form.plainPassword.first, form.plainPassword] %}
+                    {% set anchor = field.vars.name == 'plainPassword' ? form.plainPassword.first.vars.id : field.vars.id %}
+                    {% for error in field.vars.errors %}
+                        <li><a class="alert-link" href="#{{ anchor }}">{{ error.message }}</a></li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+        {# Après une erreur, le focus va au résumé ci-dessus : pas d'autofocus concurrent sur l'adresse e-mail. #}
+        {{ form_row(form.email, {attr: {autofocus: not form.vars.submitted}}) }}
+        {{ form_row(form.plainPassword.first) }}
+        {{ form_row(form.plainPassword.second) }}
+
+        <button class="btn btn-tl w-100 mt-2" type="submit">Créer mon compte</button>
+    {{ form_end(form) }}
+
+    <p class="tl-help text-center mt-4 mb-0">Déjà inscrit ? <a href="{{ path('app_login') }}">Se connecter</a></p>
+{% endblock %}
