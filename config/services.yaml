@@ -7,12 +7,26 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.display_timezone: 'Europe/Paris'
+
+    # Valeur d'un point en dollars, par racine de contrat (ESU5 -> ES).
+    # Ces valeurs servent aux calculs bcmath.
+    app.contract_multipliers:
+        ES: '50'
+        MES: '5'
+        NQ: '20'
+        MNQ: '2'
+        GC: '100'
+        MGC: '10'
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $contractMultipliers: '%app.contract_multipliers%'
+            $displayTimezone: '%app.display_timezone%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -21,3 +35,15 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+when@test:
+    services:
+        App\Import\TradeImporter:
+            autowire: true
+            public: true
+        App\Portfolio\AccountDeleter:
+            autowire: true
+            public: true
+        App\Security\UserRegistration:
+            autowire: true
+            public: true

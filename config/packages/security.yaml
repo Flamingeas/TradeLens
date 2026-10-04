@@ -5,7 +5,9 @@ security:
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Security\Entity\User
 
     firewalls:
         dev:
@@ -14,18 +16,35 @@ security:
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
 
-            # Activate different ways to authenticate:
-            # https://symfony.com/doc/current/security.html#the-firewall
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                # Jeton CSRF vérifié à la connexion
+                enable_csrf: true
+                username_parameter: email
+                password_parameter: password
+                default_target_path: app_dashboard
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            logout:
+                path: app_logout
+                target: app_home
+                enable_csrf: true
+
+            # Case « Rester connecté » : connexion gardée 30 jours
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 2592000
+
+            # Au plus 5 tentatives de connexion ratées (par adresse et par IP)
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/(dashboard|import|accounts)(/|$), roles: ROLE_USER }
 
 when@test:
     security:

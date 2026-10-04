@@ -21,9 +21,15 @@ doctrine:
             App:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
+                dir: '%kernel.project_dir%/src/Portfolio/Entity'
+                prefix: 'App\Portfolio\Entity'
                 alias: App
+            Security:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Security/Entity'
+                prefix: 'App\Security\Entity'
+                alias: Security
         controller_resolver:
             auto_mapping: false
 

@@ -1,4 +1,4 @@
-# Enable stateless CSRF protection for forms and logins/logouts
+# Protection CSRF.
 framework:
     form:
         csrf_protection:
